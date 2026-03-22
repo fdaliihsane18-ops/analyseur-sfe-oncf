@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONCF — Rame ZM 160 km/h · SFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+:root {
+  --oncf: #F07800;
+  --oncf-dark: #C05A00;
+  --oncf-light: #FFF5EC;
+  --oncf-mid: #FFE0B5;
+  --bg: #FFFFFF;
+  --bg2: #F8F9FB;
+  --bg3: #F2F4F7;
+  --card: #FFFFFF;
+  --border: #E4E8EF;
+  --border-strong: #CBD2DC;
+  --text: #111827;
+  --text2: #374151;
+  --muted: #6B7280;
+  --muted2: #9CA3AF;
+  --green: #059669;
+  --green-bg: #ECFDF5;
+  --yellow: #D97706;
+  --yellow-bg: #FFFBEB;
+  --red: #DC2626;
+  --red-bg: #FEF2F2;
+  --blue: #2563EB;
+  --blue-bg: #EFF6FF;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── COVER PAGE ── */
+#coverPage {
+  position: fixed;
+  inset: 0;
+  background: #FFFFFF;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cover-stripe {
+  height: 6px;
+  background: linear-gradient(90deg, var(--oncf) 0%, #FFB347 100%);
+  flex-shrink: 0;
+}
+
+.cover-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.cover-left {
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4rem 3.5rem;
+  gap: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-left::before {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -80px;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(240,120,0,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cover-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cover-logo-img {
+  height: 56px;
+  width: auto;
+}
+
+.cover-divider-h {
+  width: 48px;
+  height: 3px;
+  background: var(--oncf);
+  border-radius: 2px;
+}
+
+.cover-org {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cover-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cover-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--oncf);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cover-h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+.cover-h1 em {
+  font-style: normal;
+  color: var(--oncf);
+}
+
+.cover-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+.cover-authors {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cover-authors-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--muted2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.cover-author-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cover-author-inst {
+  font-size: 0.8rem;
+  color: var(--oncf);
+  font-weight: 500;
+}
+
+.cover-supervisors {
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.25rem;
+  line-height: 1.6;
+}
+
+.cover-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  gap: 2rem;
+  background: var(--bg);
+  position: relative;
+}
+
+.cover-right::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(240,120,0,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(240,120,0,0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.cover-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+}
+
+.cover-stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.cover-stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+.cover-stat-card.orange { border-top: 3px solid var(--oncf); }
+.cover-stat-card.green  { border-top: 3px solid var(--green); }
+.cover-stat-card.yellow { border-top: 3px solid var(--yellow); }
+.cover-stat-card.red    { border-top: 3px solid var(--red); }
+
+.cover-stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.cover-stat-unit {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 500;
+  margin-left: 3px;
+}
+
+.cover-stat-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.cover-plan-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--oncf-light);
+  border: 1px solid rgba(240,120,0,0.25);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--oncf-dark);
+  position: relative;
+}
+
+.cover-enter-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--oncf);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem 2rem;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(240,120,0,0.35);
+  position: relative;
+}
+
+.cover-enter-btn:hover {
+  background: var(--oncf-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(240,120,0,0.4);
+}
+
+.cover-enter-btn svg { flex-shrink: 0; }
+
+.cover-footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 0.9rem 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.cover-footer-left {
+  font-size: 0.75rem;
+  color: var(--muted2);
+}
+
+.cover-footer-right {
+  font-size: 0.75rem;
+  color: var(--muted2);
+}
+
+.cover-footer-right strong { color: var(--oncf); }
+
+/* ── MAIN APP (hidden until cover dismissed) ── */
+#mainApp { display: none; }
+#mainApp.visible { display: block; }
+
+/* ── HEADER ── */
+header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.logo-area img {
+  height: 36px;
+  width: auto;
+}
+
+.logo-divider {
+  width: 1px;
+  height: 30px;
+  background: var(--border);
+}
+
+.app-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.app-sub {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--oncf-light);
+  border: 1px solid rgba(240,120,0,0.25);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 0.73rem;
+  color: var(--oncf-dark);
+  font-weight: 600;
+}
+
+.header-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--oncf);
+  animation: pulse 2s infinite;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.back-btn:hover { color: var(--text); background: var(--border); }
+
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50% { opacity:0.3; }
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #FFFAF5 0%, #F8F9FB 60%, #F2F4F7 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 2.2rem 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(240,120,0,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  max-width: 1200px;
+}
+
+.hero-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--oncf);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.hero h1 span { color: var(--oncf); }
+
+.hero p {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  max-width: 560px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.hero-stat {
+  text-align: center;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.3rem;
+  min-width: 95px;
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--oncf);
+}
+
+.hero-stat-lbl {
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+/* ── NAV TABS ── */
+.tabs-wrap {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+  padding: 0 2.5rem;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 0.9rem 1.3rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--oncf); border-bottom-color: var(--oncf); font-weight: 600; }
+
+.tab-icon {
+  width: 16px; height: 16px;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+.tab-btn.active .tab-icon { opacity: 1; color: var(--oncf); }
+
+/* ── CONTENT ── */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── SECTION TITLES ── */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: rgba(240,120,0,0.18);
+  line-height: 1;
+  user-select: none;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.section-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-sm {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+}
+
+.metric-lbl {
+  font-size: 0.7rem;
+  color: var(--muted2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.metric-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.metric-sub {
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+
+/* ── SLIDER ── */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.slider-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  width: 145px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.slider-row input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+  border: none;
+}
+
+.slider-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--oncf);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px var(--oncf), var(--shadow-sm);
+}
+
+.slider-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--oncf);
+  min-width: 75px;
+  text-align: right;
+}
+
+/* ── ALERT BOXES ── */
+.alert {
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  margin-top: 1rem;
+}
+
+.alert-ok  { background: var(--green-bg);  border: 1px solid rgba(5,150,105,0.2);  color: #065F46; }
+.alert-warn { background: var(--yellow-bg); border: 1px solid rgba(217,119,6,0.2); color: #78350F; }
+.alert-crit { background: var(--red-bg);    border: 1px solid rgba(220,38,38,0.2);  color: #7F1D1D; }
+
+/* ── POINT GRID ── */
+.pts-grid {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.pt-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.pt-box.active  { border-color: var(--oncf); background: var(--oncf-light); }
+.pt-box.coude   { border-color: var(--red);  background: var(--red-bg); }
+
+.pt-i { font-size: 0.62rem; color: var(--muted2); margin-bottom: 2px; }
+.pt-l { font-family: 'Syne',sans-serif; font-size: 0.95rem; font-weight: 700; }
+.pt-u { font-size: 0.6rem; color: var(--muted2); }
+
+/* ── SCE BUTTONS ── */
+.sce-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.sce-btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-family: 'DM Sans',sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: var(--shadow-sm);
+}
+
+.sce-btn:hover, .sce-btn.active {
+  background: var(--oncf);
+  color: white;
+  border-color: var(--oncf);
+  box-shadow: 0 3px 10px rgba(240,120,0,0.3);
+}
+
+/* ── RECOMMENDATION CARDS ── */
+.rec-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.rec-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.rec-card-high { border-left-color: var(--red); }
+.rec-card-med  { border-left-color: var(--yellow); }
+.rec-card-low  { border-left-color: var(--green); }
+
+.rec-tag {
+  display: inline-block;
+  font-size: 0.67rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.tag-high { background: var(--red-bg);    color: var(--red); }
+.tag-med  { background: var(--yellow-bg); color: var(--yellow); }
+.tag-low  { background: var(--green-bg);  color: var(--green); }
+
+.rec-title {
+  font-family: 'Syne',sans-serif;
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.rec-body {
+  font-size: 0.81rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── ROLE STEPS ── */
+.role-steps { display: flex; flex-direction: column; gap: 1rem; }
+
+.role-step { display: flex; gap: 1rem; align-items: flex-start; }
+
+.step-num {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--oncf-light);
+  border: 1.5px solid rgba(240,120,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne',sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--oncf);
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-family: 'Syne',sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.step-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+
+/* ── CANVAS ── */
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  margin-top: 1rem;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 1.4rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3rem;
+}
+
+.footer-left { font-size: 0.77rem; color: var(--muted); line-height: 1.6; }
+.footer-right { font-size: 0.77rem; color: var(--muted2); }
+.footer-right span { color: var(--oncf); font-weight: 600; }
+
+/* ── ANIMATIONS ── */
+.panel.active { animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── CALC BOX ── */
+.calc-box {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  color: var(--muted);
+  line-height: 2.2;
+}
+
+.calc-hl { color: var(--red); font-weight: 700; }
+.calc-ok { color: var(--oncf-dark); font-weight: 700; }
+
+/* ── CHAIN DIAGRAM ── */
+.chain-box {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+.chain-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-bottom: 4px;
+  min-width: max-content;
+}
+
+.chain-node {
+  text-align: center;
+  min-width: 80px;
+}
+
+.chain-node-inner {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 8px;
+  font-size: 0.7rem;
+  color: var(--text2);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.chain-node-inner.highlight {
+  background: var(--red-bg);
+  border: 2px solid rgba(220,38,38,0.4);
+  color: var(--red);
+  font-weight: 700;
+}
+
+.chain-node-inner.source {
+  background: var(--oncf-light);
+  border: 1px solid rgba(240,120,0,0.3);
+  color: var(--oncf-dark);
+  font-weight: 700;
+}
+
+.chain-arrow {
+  color: var(--muted2);
+  padding: 0 5px;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ── SECTION INNER HEADER ── */
+.inner-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.inner-bar {
+  width: 3px;
+  height: 18px;
+  background: var(--oncf);
+  border-radius: 2px;
+}
+
+.inner-bar.red { background: var(--red); }
+
+.inner-title {
+  font-family: 'Syne',sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.inner-title.red { color: var(--red); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) {
+  .cover-body { grid-template-columns: 1fr; }
+  .cover-right { display: none; }
+  .cover-left { padding: 3rem 2rem; }
+  .cover-footer { padding: 0.9rem 2rem; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-stats { display: none; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .pts-grid { grid-template-columns: repeat(4,1fr); }
+  .content { padding: 1.5rem 1rem; }
+  header, footer { padding: 0 1rem; }
+  .tabs-wrap { padding: 0 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     COVER PAGE
+══════════════════════════════════════════ -->
+<div id="coverPage">
+  <div class="cover-stripe"></div>
+  <div style="background:#fff;border-bottom:1px solid #F3F4F6;padding:8px 3rem;display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-size:.7rem;color:#9CA3AF;font-weight:500;">Office National des Chemins de Fer — ONCF</div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;color:#374151;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F07800" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="cover-clock-date" style="color:#6B7280;font-weight:500;"></span>
+      <span style="color:#D1D5DB;">|</span>
+      <span id="cover-clock-time" style="color:#F07800;font-weight:700;font-size:.8rem;letter-spacing:.05em;"></span>
+    </div>
+  </div>
+
+  <div class="cover-body">
+    <!-- LEFT -->
+    <div class="cover-left">
+      <div class="cover-logo-wrap">
+        <img class="cover-logo-img" src="data:image/png;base64,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" alt="Logo ONCF">
+        <div class="cover-divider-h"></div>
+        <div class="cover-org">Office National des Chemins de Fer</div>
+      </div>
+
+      <div class="cover-title-block">
+        <div class="cover-eyebrow">PFE 2025–2026 · FST Béni Mellal</div>
+        <h1 class="cover-h1">Étude du gonflement de la <em>Self de Filtre d'Entrée</em></h1>
+        <p class="cover-desc">Application d'analyse et de diagnostic basée sur les données constructeur du Plan ONCF 30428. Simulation interactive du phénomène de saturation magnétique des rames ZM 160 km/h.</p>
+      </div>
+
+      <div class="cover-authors">
+        <div class="cover-authors-label">Réalisé par</div>
+        <div>
+          <div class="cover-author-name">FDALI Ihsane &amp; ELKETTANI Rahma</div>
+          <div class="cover-author-inst">Projet de Fin d'Études · PFE 2025–2026</div>
+        </div>
+        <div class="cover-supervisors">
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="cover-right">
+      <div class="cover-plan-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Plan ONCF 30428 · Données constructeur
+      </div>
+
+      <div class="cover-stats-grid">
+        <div class="cover-stat-card orange">
+          <div class="cover-stat-val">52<span class="cover-stat-unit">mH</span></div>
+          <div class="cover-stat-label">L nominale</div>
+        </div>
+        <div class="cover-stat-card green">
+          <div class="cover-stat-val" style="color:var(--green)">380<span class="cover-stat-unit">A</span></div>
+          <div class="cover-stat-label">Iell nominal</div>
+        </div>
+        <div class="cover-stat-card yellow">
+          <div class="cover-stat-val" style="color:var(--yellow)">420<span class="cover-stat-unit">A</span></div>
+          <div class="cover-stat-label">Coude sat.</div>
+        </div>
+        <div class="cover-stat-card red">
+          <div class="cover-stat-val" style="color:var(--red)">480<span class="cover-stat-unit">A</span></div>
+          <div class="cover-stat-label">Isat limite</div>
+        </div>
+      </div>
+
+      <button class="cover-enter-btn" onclick="enterApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Accéder à l'application
+      </button>
+
+      <div style="font-size:0.72rem; color:var(--muted2); text-align:center; line-height:1.6; max-width:300px;">
+        Rame ZM Automotrices Triples · 160 km/h<br>
+        Noyau Fe-Si · 5 panneaux interactifs
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-footer-left">Projet de Fin d'Études · PFE 2025–2026</div>
+    <div class="cover-footer-right">Version 1.0 &nbsp;·&nbsp; <strong>ONCF Pôle Matériel</strong></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APPLICATION
+══════════════════════════════════════════ -->
+<div id="mainApp">
+
+<!-- HEADER -->
+<header>
+  <div class="logo-area">
+    <img src="data:image/png;base64,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" alt="ONCF">
+    <div class="logo-divider"></div>
+    <div>
+      <div class="app-title">Self de Filtre d'Entrée — Rame ZM 160 km/h</div>
+      <div class="app-sub">Plan ONCF 30428 · FDALI Ihsane &amp; ELKETTANI Rahma</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div id="live-clock" style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:6px 14px;font-size:.75rem;font-weight:600;color:#374151;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F07800" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="clock-date" style="color:#6B7280;font-weight:500;"></span>
+      <span style="color:#D1D5DB;">|</span>
+      <span id="clock-time" style="color:#111827;font-weight:700;letter-spacing:.03em;"></span>
+    </div>
+    <div class="header-badge">Plan ONCF 30428</div>
+    <button class="back-btn" onclick="showCover()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Accueil
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-label">PFE 2025–2026 · FST Béni Mellal</div>
+      <h1>Étude du gonflement de la <span>Self de Filtre d'Entrée</span></h1>
+      <p>Application d'analyse et de diagnostic basée sur les données constructeur du Plan ONCF 30428. Simulation interactive du phénomène de saturation magnétique — cause principale du gonflement de la SFE.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">52 mH</div><div class="hero-stat-lbl">L nominal</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:var(--red)">480 A</div><div class="hero-stat-lbl">Isat</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:var(--yellow)">420 A</div><div class="hero-stat-lbl">Coude</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="showTab('p1',this)">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+    Rôle &amp; Fonctionnement
+  </button>
+  <button class="tab-btn" onclick="showTab('p2',this)">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    Courbe L(I)
+  </button>
+  <button class="tab-btn" onclick="showTab('p3',this)">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+    Calcul Isat(L0)
+  </button>
+  <button class="tab-btn" onclick="showTab('p4',this)">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Simulation I(t)
+  </button>
+  <button class="tab-btn" onclick="showTab('p5',this)">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Diagnostic &amp; Recommandations
+  </button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- PANEL 1 : RÔLE -->
+<div id="p1" class="panel active">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div>
+      <div class="section-title">Rôle et position de la SFE dans la chaîne de traction</div>
+      <div class="section-desc">Plan ONCF 30428 · Automotrices Triples 160 km/h</div>
+    </div>
+  </div>
+
+  <div class="chain-box">
+    <div style="display:flex; align-items:center; gap:6px; margin-bottom:1rem;">
+      <div class="inner-bar"></div>
+      <div class="inner-title">Architecture de la chaîne de traction</div>
+    </div>
+    <div class="chain-inner">
+      <div class="chain-node"><div class="chain-node-inner source">Caténaire<br>3000 V DC</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-node-inner">Panto&shy;graphe</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-node-inner">DJ</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-node-inner highlight">SFE<br>52 mH ★</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-node-inner">Filtre LC<br>CAPFE 667µF</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-node-inner">HA1 // HA2<br>Imax=410A</div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-node-inner">4 Moteurs<br>AE231.1S</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1.5rem;">
+    <div class="card">
+      <div class="inner-header"><div class="inner-bar"></div><div class="inner-title">Rôles de la SFE</div></div>
+      <div class="role-steps">
+        <div class="role-step">
+          <div class="step-num">1</div>
+          <div><div class="step-title">Filtrage des harmoniques</div><div class="step-desc">Lisse les ondulations de courant générées par le hachage (71–195 Hz). Circuit accordé à 50 Hz pour une impédance > 6 Ω.</div></div>
+        </div>
+        <div class="role-step">
+          <div class="step-num">2</div>
+          <div><div class="step-title">Limitation di/dt</div><div class="step-desc">Limite la vitesse de montée du courant lors des reconnexions caténaire et des transitoires de commutation.</div></div>
+        </div>
+        <div class="role-step">
+          <div class="step-num">3</div>
+          <div><div class="step-title">Protection des hacheurs</div><div class="step-desc">Protège HA1 et HA2 contre les surintensités transitoires via les fusibles CCHA1 et CCHA2.</div></div>
+        </div>
+        <div class="role-step">
+          <div class="step-num">4</div>
+          <div><div class="step-title">Filtre LC d'entrée</div><div class="step-desc">Forme avec CAPFE (667 µF) un filtre accordé à 4–14 Hz au démarrage et 4 Hz en régime normal.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <div class="inner-header"><div class="inner-bar red"></div><div class="inner-title red">Cause du gonflement</div></div>
+      <div class="role-steps">
+        <div class="role-step">
+          <div class="step-num" style="background:var(--red-bg); border-color:rgba(220,38,38,0.25); color:var(--red);">1</div>
+          <div><div class="step-title">Phase de roue libre</div><div class="step-desc">Le hacheur se coupe brutalement → courant non contrôlé → I peut dépasser 420 A (coude de saturation).</div></div>
+        </div>
+        <div class="role-step">
+          <div class="step-num" style="background:var(--red-bg); border-color:rgba(220,38,38,0.25); color:var(--red);">2</div>
+          <div><div class="step-title">Saturation magnétique</div><div class="step-desc">À I > 420 A : L chute de 52 → 27.5 mH (coude). Le µr du noyau Fe-Si s'effondre. di/dt explose.</div></div>
+        </div>
+        <div class="role-step">
+          <div class="step-num" style="background:var(--red-bg); border-color:rgba(220,38,38,0.25); color:var(--red);">3</div>
+          <div><div class="step-title">Échauffement thermique</div><div class="step-desc">P = R·I² augmente en I² → T dépasse 155°C (classe F) → feuillets, bobinage et carter gonflent.</div></div>
+        </div>
+        <div class="role-step">
+          <div class="step-num" style="background:var(--red-bg); border-color:rgba(220,38,38,0.25); color:var(--red);">4</div>
+          <div><div class="step-title">Courants de Foucault</div><div class="step-desc">Pertes ∝ f²·B²·t² dans les feuillets Fe-Si. À 71–195 Hz, les pertes sont 2–15× supérieures à 50 Hz.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card-sm"><div class="metric-lbl">L nominale</div><div class="metric-val" style="color:var(--oncf)">52 mH</div><div class="metric-sub">I = 0 A</div></div>
+    <div class="card-sm"><div class="metric-lbl">Iell nominal</div><div class="metric-val" style="color:var(--green)">380 A</div><div class="metric-sub">Courant de service</div></div>
+    <div class="card-sm"><div class="metric-lbl">Coude saturation</div><div class="metric-val" style="color:var(--yellow)">420 A</div><div class="metric-sub">L = 27.5 mH</div></div>
+    <div class="card-sm"><div class="metric-lbl">Isat (limite)</div><div class="metric-val" style="color:var(--red)">480 A</div><div class="metric-sub">Ischr constructeur</div></div>
+  </div>
+</div>
+
+<!-- PANEL 2 : COURBE L(I) -->
+<div id="p2" class="panel">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div>
+      <div class="section-title">Courbe L(I) — Relation courant / inductance</div>
+      <div class="section-desc">7 points mesurés · Plan ONCF 30428 · Noyau Fe-Si</div>
+    </div>
+  </div>
+
+  <div class="pts-grid">
+    <div class="pt-box"><div class="pt-i">0 A</div><div class="pt-l" style="color:var(--oncf)">52</div><div class="pt-u">mH</div></div>
+    <div class="pt-box"><div class="pt-i">50 A</div><div class="pt-l">51</div><div class="pt-u">mH</div></div>
+    <div class="pt-box"><div class="pt-i">100 A</div><div class="pt-l">50</div><div class="pt-u">mH</div></div>
+    <div class="pt-box"><div class="pt-i">200 A</div><div class="pt-l">47</div><div class="pt-u">mH</div></div>
+    <div class="pt-box"><div class="pt-i">250 A</div><div class="pt-l">45</div><div class="pt-u">mH</div></div>
+    <div class="pt-box"><div class="pt-i">350 A</div><div class="pt-l">40</div><div class="pt-u">mH</div></div>
+    <div class="pt-box coude"><div class="pt-i">420 A</div><div class="pt-l" style="color:var(--red)">27.5</div><div class="pt-u">mH ↓</div></div>
+  </div>
+
+  <div class="slider-row">
+    <span class="slider-label">Courant I</span>
+    <input type="range" id="slI" min="0" max="480" value="200" step="1" oninput="updLI()">
+    <span class="slider-val" id="vI">200 A</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:1rem;">
+    <div class="card-sm"><div class="metric-lbl">L(I)</div><div class="metric-val" id="oL">47.0 mH</div></div>
+    <div class="card-sm"><div class="metric-lbl">di/dt</div><div class="metric-val" id="oDI">— A/ms</div></div>
+    <div class="card-sm"><div class="metric-lbl">P dissipée</div><div class="metric-val" id="oP">— W</div></div>
+    <div class="card-sm"><div class="metric-lbl">État SFE</div><div class="metric-val" id="oEt" style="font-size:1rem;">Normal</div></div>
+  </div>
+
+  <div id="alertLI" class="alert" style="display:none;"></div>
+  <div class="chart-wrap"><canvas id="cLI"></canvas></div>
+</div>
+
+<!-- PANEL 3 : CALCUL ISAT -->
+<div id="p3" class="panel">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div>
+      <div class="section-title">Calcul de Isat en fonction de L0 mesurée</div>
+      <div class="section-desc">Si L0 diminue (vieillissement) → Isat diminue → risque de saturation prématurée</div>
+    </div>
+  </div>
+
+  <div class="slider-row">
+    <span class="slider-label">L0 mesurée (mH)</span>
+    <input type="range" id="slL0" min="20" max="52" value="40" step="1" oninput="updIsat()">
+    <span class="slider-val" id="vL0">40 mH</span>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:1rem;">
+    <div class="card-sm"><div class="metric-lbl">Isat nominal (L0=52mH)</div><div class="metric-val" style="color:var(--blue)">480 A</div></div>
+    <div class="card-sm"><div class="metric-lbl">Isat calculé</div><div class="metric-val" id="isatCalc" style="color:var(--red)">— A</div></div>
+    <div class="card-sm"><div class="metric-lbl">Perte de marge</div><div class="metric-val" id="isatDelta" style="color:var(--red)">— A</div></div>
+  </div>
+
+  <div id="calcBox" class="calc-box" style="margin-bottom:1rem;"></div>
+  <div id="alertIsat" class="alert" style="display:none; margin-bottom:1rem;"></div>
+  <div class="chart-wrap"><canvas id="cIsat"></canvas></div>
+</div>
+
+<!-- PANEL 4 : SIMULATION -->
+<div id="p4" class="panel">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div>
+      <div class="section-title">Simulation temporelle I(t) — Scénarios d'engouffrement</div>
+      <div class="section-desc">Intégration numérique · Équation L(i)·di/dt = Ue − R·i</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div class="card">
+      <div style="font-size:0.75rem; font-weight:700; color:var(--muted2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:1rem;">Paramètres</div>
+      <div class="slider-row">
+        <span class="slider-label">Ucat (V)</span>
+        <input type="range" id="slUe" min="1000" max="4080" value="3000" step="10" oninput="updSim()">
+        <span class="slider-val" id="vUe">3000 V</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">I initial (A)</span>
+        <input type="range" id="slI0" min="0" max="450" value="200" step="10" oninput="updSim()">
+        <span class="slider-val" id="vI0">200 A</span>
+      </div>
+      <div class="slider-row" style="margin-bottom:0;">
+        <span class="slider-label">R ligne (Ω)</span>
+        <input type="range" id="slRl" min="0.05" max="0.30" value="0.10" step="0.01" oninput="updSim()">
+        <span class="slider-val" id="vRl">0.10 Ω</span>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:0.75rem; font-weight:700; color:var(--muted2); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:1rem;">Résultats</div>
+      <div class="grid-2">
+        <div class="card-sm"><div class="metric-lbl">I final</div><div class="metric-val" id="simIfin">—</div></div>
+        <div class="card-sm"><div class="metric-lbl">L finale</div><div class="metric-val" id="simLfin">—</div></div>
+        <div class="card-sm"><div class="metric-lbl">t Isat atteint</div><div class="metric-val" id="simTsat">—</div></div>
+        <div class="card-sm"><div class="metric-lbl">État</div><div class="metric-val" id="simEtat" style="font-size:0.9rem;">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sce-btns">
+    <button class="sce-btn active" onclick="setScen(3000,200,0.10,this)">Régime normal</button>
+    <button class="sce-btn" onclick="setScen(3200,300,0.10,this)">Surtension +200V</button>
+    <button class="sce-btn" onclick="setScen(3800,380,0.10,this)">Pic caténaire</button>
+    <button class="sce-btn" onclick="setScen(3000,420,0.10,this)">Roue libre</button>
+  </div>
+
+  <div class="chart-wrap" style="height:280px;"><canvas id="cSim"></canvas></div>
+</div>
+
+<!-- PANEL 5 : DIAGNOSTIC -->
+<div id="p5" class="panel">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div>
+      <div class="section-title">Diagnostic &amp; Recommandations</div>
+      <div class="section-desc">Actions correctives et préventives — ONCF Pôle Matériel</div>
+    </div>
+  </div>
+
+  <div class="slider-row" style="margin-bottom:1.5rem;">
+    <span class="slider-label">L0 mesurée (mH)</span>
+    <input type="range" id="slDiag" min="20" max="52" value="45" step="1" oninput="updDiag()">
+    <span class="slider-val" id="vDiag">45 mH</span>
+  </div>
+
+  <div id="diagAlert" class="alert" style="margin-bottom:1.5rem;"></div>
+
+  <div class="grid-3" style="margin-bottom:1.5rem;">
+    <div class="card-sm"><div class="metric-lbl">L0 mesurée</div><div class="metric-val" id="dL0">45 mH</div></div>
+    <div class="card-sm"><div class="metric-lbl">Isat calculé</div><div class="metric-val" id="dIsat">— A</div></div>
+    <div class="card-sm"><div class="metric-lbl">Dégradation L0</div><div class="metric-val" id="dDeg">—%</div></div>
+  </div>
+
+  <div style="font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:1rem; color:var(--text);">Plan d'actions recommandées</div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+    <div class="rec-card rec-card-high">
+      <span class="rec-tag tag-high">Priorité haute — immédiat</span>
+      <div class="rec-title">Acquisition de SFE neuves</div>
+      <div class="rec-body">Commander des SFE conformes au Plan 30428. Vérifier L0 ≥ 50 mH à la réception. Intégrer les paramètres L(I) dans le cahier des charges fournisseur.</div>
+    </div>
+    <div class="rec-card rec-card-high">
+      <span class="rec-tag tag-high">Priorité haute — immédiat</span>
+      <div class="rec-title">Variateur de courant / limitation Imax</div>
+      <div class="rec-body">Réduire Imax hacheur de 410 A à 380 A = Iell. La marge passe de 40 A à 100 A (×2.5). Coût zéro — réglage logiciel uniquement.</div>
+    </div>
+    <div class="rec-card rec-card-med">
+      <span class="rec-tag tag-med">Priorité moyenne — 1 mois</span>
+      <div class="rec-title">Acquisition appareil de mesure d'inductance</div>
+      <div class="rec-body">RLC-mètre de puissance capable de mesurer L jusqu'à 480 A DC. Permet de tracer la courbe L(I) réelle et de détecter la dégradation du noyau avant panne.</div>
+    </div>
+    <div class="rec-card rec-card-med">
+      <span class="rec-tag tag-med">Priorité moyenne — 1 mois</span>
+      <div class="rec-title">Expertise du noyau magnétique</div>
+      <div class="rec-body">Vérifier les propriétés magnétiques du noyau Fe-Si (perméabilité µr). Tester l'essai de démagnétisation. Contrôler l'état des feuillets et de l'isolation entre tôles.</div>
+    </div>
+    <div class="rec-card rec-card-med">
+      <span class="rec-tag tag-med">Priorité moyenne — 2 mois</span>
+      <div class="rec-title">Mesure résistance interne &amp; isolement</div>
+      <div class="rec-body">Mesure de R bobinage (image de l'état des spires Cu). Mesure d'isolement &gt; 1 MΩ obligatoire. Respecter les tolérances Plan 30428 à chaque visite VB-VF.</div>
+    </div>
+    <div class="rec-card rec-card-low">
+      <span class="rec-tag tag-low">Étude technique — 3 mois</span>
+      <div class="rec-title">Protocole d'essai de démagnétisation</div>
+      <div class="rec-body">Appliquer un courant AC décroissant depuis I &gt; 480 A vers 0 A. Tension d'essai = R × I ≈ 0.05 × 480 = 24 V. Générateur BF réglable + shunt de mesure.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="inner-header"><div class="inner-bar"></div><div class="inner-title">Vérification des filtres d'entrée</div></div>
+    <div class="grid-3">
+      <div class="card-sm">
+        <div class="metric-lbl">CAPFE CS6</div>
+        <div style="font-size:0.85rem; color:var(--text); font-weight:600; margin:4px 0;">667 µF</div>
+        <div class="metric-sub">Mesure ESR &lt; 0.1 Ω · Isolement &gt; 1 MΩ · Vérifier absence de gonflement physique</div>
+      </div>
+      <div class="card-sm">
+        <div class="metric-lbl">Fusibles CCHA1/CCHA2</div>
+        <div style="font-size:0.85rem; color:var(--text); font-weight:600; margin:4px 0;">F602 3kV</div>
+        <div class="metric-sub">Contrôle visuel à chaque visite · Remplacement systématique après incident</div>
+      </div>
+      <div class="card-sm">
+        <div class="metric-lbl">Sonde thermique SFE</div>
+        <div style="font-size:0.85rem; color:var(--text); font-weight:600; margin:4px 0;">Classe F · 155°C</div>
+        <div class="metric-sub">Étalonnage · Alarme à 120°C · Remplacement si dérive &gt; ±5°C</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    Réalisé par <strong>FDALI Ihsane &amp; ELKETTANI Rahma</strong> · FST Béni Mellal · PFE 2025–2026<br>
+    Encadrement : Pr. KHOUCH Zakaria · M. IHSANNE Khalid · M. HABBAN Aziz
+  </div>
+  <div class="footer-right">Plan ONCF <span>30428</span> · Données constructeur · Version 1.0</div>
+</footer>
+
+</div><!-- /mainApp -->
+
+<script>
+// ── COVER / NAV ──
+function enterApp() {
+  document.getElementById('coverPage').style.display = 'none';
+  const app = document.getElementById('mainApp');
+  app.style.display = 'block';
+  app.style.animation = 'fadeIn 0.4s ease';
+  // Init charts if not done
+  if (!chartsReady) { initCharts(); chartsReady = true; }
+}
+
+function showCover() {
+  document.getElementById('coverPage').style.display = 'flex';
+  document.getElementById('coverPage').style.flexDirection = 'column';
+}
+
+// ── DATA ──
+const I_PTS=[0,50,100,200,250,350,420];
+const L_PTS=[52,51,50,47,45,40,27.5];
+const L0R=52, RSAT=27.5/52, RSFE=0.05;
+
+function getL(i,L0=52){
+  const ia=Math.abs(i), r=L_PTS.map(l=>l/L0R);
+  if(ia<=0) return L0;
+  if(ia>=420) return +(RSAT*L0).toFixed(2);
+  for(let k=0;k<I_PTS.length-1;k++){
+    if(ia>=I_PTS[k]&&ia<=I_PTS[k+1]){
+      const a=(ia-I_PTS[k])/(I_PTS[k+1]-I_PTS[k]);
+      return +((r[k]+a*(r[k+1]-r[k]))*L0).toFixed(2);
+    }
+  }
+  return L0;
+}
+
+function findIsat(L0){
+  const t=RSAT*L0;
+  for(let i=0;i<=480;i++) if(getL(i,L0)<=t) return i;
+  return 480;
+}
+
+function etat(I){
+  if(I>=480) return {t:'SATURATION',c:'#DC2626'};
+  if(I>=410) return {t:'Critique',c:'#D97706'};
+  if(I>=380) return {t:'Surveillance',c:'#F07800'};
+  return {t:'Normal',c:'#059669'};
+}
+
+// ── TABS ──
+function showTab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── CHART OPTIONS (light theme) ──
+const baseOpts = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:true,position:'top',labels:{color:'#6B7280',font:{size:11},boxWidth:12}}},
+  scales:{
+    x:{ticks:{color:'#9CA3AF',font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,color:'#6B7280',font:{size:11}}},
+    y:{ticks:{color:'#9CA3AF',font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,color:'#6B7280',font:{size:11}}}
+  }
+};
+
+let chartsReady = false;
+let cLI, cIsat, cSim;
+
+function initCharts() {
+  const Is=Array.from({length:481},(_,i)=>i);
+
+  // ── PANEL 2 ──
+  cLI=new Chart(document.getElementById('cLI').getContext('2d'),{
+    type:'line',
+    data:{labels:Is,datasets:[
+      {label:'L(I) Plan 30428',data:Is.map(i=>getL(i)),borderColor:'#F07800',borderWidth:2.5,pointRadius:0,fill:false,tension:0.3},
+      {label:'Points constructeur',data:I_PTS.map((x,i)=>({x,y:L_PTS[i]})),type:'scatter',backgroundColor:'#111827',borderColor:'#F07800',pointRadius:7,showLine:false},
+      {label:'Curseur',data:[{x:200,y:getL(200)}],type:'scatter',backgroundColor:'#DC2626',borderColor:'#DC2626',pointRadius:9,showLine:false}
+    ]},
+    options:{...baseOpts,
+      plugins:{...baseOpts.plugins,annotation:{annotations:{
+        zN:{type:'box',xMin:0,xMax:380,backgroundColor:'rgba(5,150,105,0.04)',borderColor:'transparent',label:{display:true,content:'Normale',position:{x:'center',y:'start'},color:'#059669',font:{size:10}}},
+        zC:{type:'box',xMin:380,xMax:420,backgroundColor:'rgba(217,119,6,0.05)',borderColor:'transparent',label:{display:true,content:'Critique',position:{x:'center',y:'start'},color:'#D97706',font:{size:10}}},
+        zS:{type:'box',xMin:420,xMax:480,backgroundColor:'rgba(220,38,38,0.05)',borderColor:'transparent',label:{display:true,content:'Saturation',position:{x:'center',y:'start'},color:'#DC2626',font:{size:10}}},
+        l1:{type:'line',xMin:380,xMax:380,borderColor:'#059669',borderWidth:1.5,borderDash:[4,3]},
+        l2:{type:'line',xMin:420,xMax:420,borderColor:'#D97706',borderWidth:1.5,borderDash:[4,3]},
+        l3:{type:'line',xMin:480,xMax:480,borderColor:'#DC2626',borderWidth:2,borderDash:[4,3]}
+      }}},
+      scales:{
+        x:{...baseOpts.scales.x,min:0,max:490,title:{display:true,text:'Courant I (A)',color:'#6B7280',font:{size:11}}},
+        y:{...baseOpts.scales.y,min:0,max:58,title:{display:true,text:'Inductance L (mH)',color:'#6B7280',font:{size:11}}}
+      }
+    }
+  });
+  updLI();
+
+  // ── PANEL 3 ──
+  cIsat=new Chart(document.getElementById('cIsat').getContext('2d'),{
+    type:'line',
+    data:{labels:Is,datasets:[
+      {label:'L0=52mH (neuve)',data:Is.map(i=>getL(i,52)),borderColor:'#2563EB',borderWidth:2,pointRadius:0,fill:false,tension:0.3},
+      {label:'L0=40mH (dégradée)',data:Is.map(i=>getL(i,40)),borderColor:'#DC2626',borderWidth:2,pointRadius:0,fill:false,tension:0.3,borderDash:[6,3]},
+      {label:'Point Isat dégradé',data:[{x:findIsat(40),y:getL(findIsat(40),40)}],type:'scatter',backgroundColor:'#DC2626',borderColor:'#DC2626',pointRadius:9,showLine:false}
+    ]},
+    options:{...baseOpts,
+      plugins:{...baseOpts.plugins,annotation:{annotations:{
+        l1:{type:'line',xMin:480,xMax:480,borderColor:'#2563EB',borderWidth:1.5,borderDash:[4,3],label:{display:true,content:'Isat(52mH)=480A',position:'start',color:'#2563EB',font:{size:9}}},
+        l2:{type:'line',xMin:findIsat(40),xMax:findIsat(40),borderColor:'#DC2626',borderWidth:2,borderDash:[4,3],label:{display:true,content:'Isat(40mH)',position:'start',color:'#DC2626',font:{size:9},yAdjust:15}},
+        l3:{type:'line',xMin:380,xMax:380,borderColor:'#059669',borderWidth:1,borderDash:[4,3]}
+      }}},
+      scales:{
+        x:{...baseOpts.scales.x,min:0,max:490,title:{display:true,text:'Courant I (A)',color:'#6B7280',font:{size:11}}},
+        y:{...baseOpts.scales.y,min:0,max:58,title:{display:true,text:'L (mH)',color:'#6B7280',font:{size:11}}}
+      }
+    }
+  });
+  updIsat();
+  updSim();
+  updDiag();
+}
+
+function updLI(){
+  if(!chartsReady) return;
+  const I=+document.getElementById('slI').value;
+  document.getElementById('vI').textContent=I+' A';
+  const L=getL(I),didt=((3000-RSFE*I)/(L/1000)/1000),P=Math.round(RSFE*I*I);
+  const et=etat(I);
+  document.getElementById('oL').textContent=L.toFixed(1)+' mH';
+  document.getElementById('oDI').textContent=didt.toFixed(1)+' A/ms';
+  document.getElementById('oP').textContent=P.toLocaleString()+' W';
+  document.getElementById('oEt').textContent=et.t;
+  document.getElementById('oEt').style.color=et.c;
+  const al=document.getElementById('alertLI');
+  if(I>=480){al.style.display='block';al.className='alert alert-crit';al.textContent='SATURATION : I='+I+'A ≥ Isat=480A — L='+L+'mH — di/dt='+didt.toFixed(0)+'A/ms — Gonflement SFE !';}
+  else if(I>=420){al.style.display='block';al.className='alert alert-warn';al.textContent='Coude saturation : I='+I+'A — L chute à '+L+'mH — di/dt='+didt.toFixed(0)+' A/ms — Risque élevé.';}
+  else if(I>=380){al.style.display='block';al.className='alert alert-warn';al.textContent='Zone de surveillance : I='+I+'A — Marge vers saturation : '+(480-I)+' A.';}
+  else{al.style.display='none';}
+  cLI.data.datasets[2].data=[{x:I,y:L}];
+  cLI.update('none');
+}
+
+function updIsat(){
+  if(!chartsReady) return;
+  const L0=+document.getElementById('slL0').value;
+  document.getElementById('vL0').textContent=L0+' mH';
+  const isat=findIsat(L0),Lsat=+(RSAT*L0).toFixed(2),delta=isat-480;
+  document.getElementById('isatCalc').textContent=isat+' A';
+  document.getElementById('isatDelta').textContent=(delta>=0?'+':'')+delta+' A';
+  document.getElementById('calcBox').innerHTML=
+    `Ratio saturation noyau Fe-Si = 27.5 / 52 = <span class="calc-ok">${RSAT.toFixed(4)}</span> (constante du matériau)<br>`+
+    `Lsat cible (L0=${L0}mH) = ${L0} × ${RSAT.toFixed(4)} = <span class="calc-hl">${Lsat} mH</span><br>`+
+    `Isat calculé (interpolation Plan 30428) = <span class="calc-hl">${isat} A</span>`;
+  const al=document.getElementById('alertIsat');
+  al.style.display='block';
+  if(isat<380){al.className='alert alert-crit';al.innerHTML='<strong>CRITIQUE</strong> : Isat='+isat+'A &lt; Iell=380A — La SFE sature en régime nominal ! Remplacement immédiat.';}
+  else if(isat<410){al.className='alert alert-warn';al.innerHTML='<strong>DANGER</strong> : Isat='+isat+'A &lt; Imax hacheur=410A — Saturation probable en service.';}
+  else{al.className='alert alert-ok';al.innerHTML='<strong>OK</strong> : Isat='+isat+'A — Marge acceptable. Surveillance recommandée.';}
+  cIsat.data.datasets[1].data=Is.map(i=>getL(i,L0));
+  cIsat.data.datasets[1].label='L0='+L0+'mH (dégradée)';
+  cIsat.options.plugins.annotation.annotations.l2.xMin=isat;
+  cIsat.options.plugins.annotation.annotations.l2.xMax=isat;
+  cIsat.options.plugins.annotation.annotations.l2.label.content='Isat('+L0+'mH)='+isat+'A';
+  cIsat.data.datasets[2].data=[{x:isat,y:getL(isat,L0)}];
+  cIsat.update('none');
+}
+
+const Is=Array.from({length:481},(_,i)=>i);
+
+function simIT(Ue,I0,Rl){
+  const dt=5e-5,N=1400,R=RSFE+Rl;
+  const t=[],iA=[],lA=[];
+  let I=I0,tsat=-1;
+  for(let k=0;k<N;k++){
+    const tk=+(k*dt*1000).toFixed(3);
+    t.push(tk);
+    const L=getL(I)/1000;
+    const dI=(Ue-R*I)/L*dt;
+    I=Math.max(0,Math.min(I+dI,5000));
+    if(tsat<0&&I>=480) tsat=tk;
+    iA.push(+I.toFixed(1));
+    lA.push(+getL(I).toFixed(2));
+  }
+  return{t,iA,lA,tsat};
+}
+
+function setScen(ue,i0,rl,btn){
+  document.getElementById('slUe').value=ue;
+  document.getElementById('slI0').value=i0;
+  document.getElementById('slRl').value=rl;
+  document.querySelectorAll('.sce-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updSim();
+}
+
+function updSim(){
+  if(!chartsReady) return;
+  const Ue=+document.getElementById('slUe').value;
+  const I0=+document.getElementById('slI0').value;
+  const Rl=+document.getElementById('slRl').value;
+  document.getElementById('vUe').textContent=Ue+' V';
+  document.getElementById('vI0').textContent=I0+' A';
+  document.getElementById('vRl').textContent=Rl.toFixed(2)+' Ω';
+  const {t,iA,lA,tsat}=simIT(Ue,I0,Rl);
+  const Ifin=iA[iA.length-1],Lfin=lA[lA.length-1];
+  const et=etat(Ifin);
+  document.getElementById('simIfin').textContent=Math.round(Ifin)+' A';
+  document.getElementById('simLfin').textContent=Lfin.toFixed(1)+' mH';
+  document.getElementById('simTsat').textContent=tsat>=0?tsat.toFixed(1)+' ms':'Non atteint';
+  document.getElementById('simEtat').textContent=et.t;
+  document.getElementById('simEtat').style.color=et.c;
+  if(cSim) cSim.destroy();
+  cSim=new Chart(document.getElementById('cSim').getContext('2d'),{
+    type:'line',
+    data:{labels:t,datasets:[
+      {label:'Courant I(t) (A)',data:iA,borderColor:'#F07800',borderWidth:2,pointRadius:0,fill:false,yAxisID:'y'},
+      {label:'Inductance L(t) (mH)',data:lA,borderColor:'#9CA3AF',borderWidth:1.5,pointRadius:0,fill:false,yAxisID:'y2',borderDash:[5,4]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},
+      plugins:{legend:{display:true,position:'top',labels:{color:'#6B7280',font:{size:11},boxWidth:12}},
+        annotation:{annotations:{
+          lIsat:{type:'line',yMin:480,yMax:480,borderColor:'#DC2626',borderWidth:1.5,borderDash:[4,3],yScaleID:'y',label:{display:true,content:'Isat=480A',position:'end',color:'#DC2626',font:{size:10}}},
+          lIell:{type:'line',yMin:380,yMax:380,borderColor:'#059669',borderWidth:1,borderDash:[4,3],yScaleID:'y',label:{display:true,content:'Iell=380A',position:'end',color:'#059669',font:{size:10}}}
+        }}
+      },
+      scales:{
+        x:{ticks:{color:'#9CA3AF',font:{size:10},maxTicksLimit:10},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Temps (ms)',color:'#6B7280',font:{size:11}}},
+        y:{position:'left',ticks:{color:'#9CA3AF',font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'},title:{display:true,text:'Courant I (A)',color:'#6B7280',font:{size:11}},min:0},
+        y2:{position:'right',ticks:{color:'#9CA3AF',font:{size:10}},grid:{display:false},title:{display:true,text:'L (mH)',color:'#6B7280',font:{size:11}},min:0,max:58}
+      }
+    }
+  });
+}
+
+function updDiag(){
+  const L0=+document.getElementById('slDiag').value;
+  document.getElementById('vDiag').textContent=L0+' mH';
+  const isat=findIsat(L0),deg=+(100*(1-L0/L0R)).toFixed(1);
+  document.getElementById('dL0').textContent=L0+' mH';
+  document.getElementById('dIsat').textContent=isat+' A';
+  document.getElementById('dDeg').textContent=deg+'%';
+  const al=document.getElementById('diagAlert');
+  if(isat<380){al.className='alert alert-crit';al.innerHTML='<strong>HORS SERVICE</strong> : Isat='+isat+'A &lt; Iell=380A — Saturation en régime nominal. Immobilisation et remplacement immédiat de la SFE.';}
+  else if(isat<410){al.className='alert alert-warn';al.innerHTML='<strong>DÉGRADÉ</strong> : Isat='+isat+'A &lt; Imax hacheur=410A — Réduire Imax à '+(isat-20)+'A et planifier remplacement sous 30 jours.';}
+  else if(isat<450){al.className='alert alert-warn';al.innerHTML='<strong>ATTENTION</strong> : Isat='+isat+'A — Vieillissement détecté. Mesure d\'inductance mensuelle et surveillance renforcée.';}
+  else{al.className='alert alert-ok';al.innerHTML='<strong>BON ÉTAT</strong> : Isat='+isat+'A — SFE conforme Plan 30428. Continuer exploitation normale avec mesures trimestrielles.';}
+}
+updDiag();
+</script>
+
+<script>
+function updateClock() {
+  const now = new Date();
+  const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const dateStr = days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  const timeStr = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+  ['clock-date','cover-clock-date'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=dateStr; });
+  ['clock-time','cover-clock-time'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=timeStr; });
+}
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
